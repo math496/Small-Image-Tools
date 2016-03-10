@@ -10,7 +10,7 @@ imgIn = import_image(imgIn);
 if nargin >= 2
     
     if nargin > 2
-        warning('shrink_image should have at most 2 inputs: you have %g', ...
+        warning('grow_image should have at most 2 inputs: you have %g', ...
             nargin);
         warning('ignoring further arguments')
     end
