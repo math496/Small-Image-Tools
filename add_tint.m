@@ -1,5 +1,5 @@
-function imgOut = add_tint_img(imgIn, RED, GREEN, BLUE)
-% tints an image by adding RED, GREEN, AND BLUE directly to the pixel
+function imgOut = add_tint(imgIn, RED, GREEN, BLUE)
+% tints an image by adding RED, GREEN, AND BLUE directly to the pixel,
 % values of an image. imgIn can be an RGB or GRAYSCALE
 
 %% INPUT CHECKING
