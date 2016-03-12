@@ -4,6 +4,10 @@ function imgOut = flatten_color(imgIn, channel_depth)
 % rounding each channel to the nearest neighbor.
 %channel_depth is the number of shades of Green, or Blue allowed in the image
 % a standard image has a channel depth of 256. 
+
+% written by Efron Licht in 2016. You can use, copy, or edit this code for
+% any reason whatsoever. Go nuts.
+
 %% CHECK INPUT
 assert(nargin == 2, ...
     'flatten_color should have two inputs: imgIn, channel_depth');

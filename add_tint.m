@@ -2,6 +2,8 @@ function imgOut = add_tint(imgIn, RED, GREEN, BLUE)
 % tints an image by adding RED, GREEN, AND BLUE directly to the pixel,
 % values of an image. imgIn can be an RGB or GRAYSCALE
 
+% written by Efron Licht in 2016. You can use, copy, or edit this code for
+% any reason whatsoever. Go nuts.
 %% INPUT CHECKING
 
 assert(nargin == 4, ...

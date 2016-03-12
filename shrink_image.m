@@ -5,6 +5,9 @@ function imgOut = shrink_image(imgIn, varargin)
 % varargin is an optional parameter that is a (higher) integer; eg,
 % shrink_image(testImg, 5): 1080x1920 --> 216x384
 
+% written by Efron Licht in 2016. You can use, copy, or edit this code for
+% any reason whatsoever. Go nuts.
+
 %% INPUT HANDLING %%
 imgIn = import_image(imgIn);
 if nargin >= 2

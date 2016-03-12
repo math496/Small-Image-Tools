@@ -6,6 +6,10 @@ function imgOut = grow_image(imgIn, varargin)
 % grow_image(testImg, 5): 1080x1920 --> 5400x9600
 % this does not do any kind of nearest_neighbor smoothing or anything, it's
 % very bare-bones.
+
+% written by Efron Licht in 2016. You can use, copy, or edit this code for
+% any reason whatsoever. Go nuts.
+
 imgIn = import_image(imgIn);
 if nargin >= 2
     

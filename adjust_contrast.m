@@ -5,6 +5,9 @@ function imgOut = adjust_contrast(imgIn, CONTRAST, varargin)
 % optinal parameter, LUMINANCE, adds a value between 0 and 255 to all color
 % channels of the image BEFORE adjusting the contrast
 
+% written by Efron Licht in 2016. You can use, copy, or edit this code for
+% any reason whatsoever. Go nuts.
+
 function image_input_check(parameter, parameter_name)
     try    
         assert(isscalar(parameter))
