@@ -1,5 +1,5 @@
 # Small-Image-Tools
-Small tools for image processing made as part of this project.
+Small tools for image processing. Made for fun, programming practice, and to understand images better for my image forgery detection project with SDSU and LEIDOS.
 
 
 ## SIZE: RESAMPLING:
@@ -27,5 +27,7 @@ adjusts contrast of an image, making bright areas brighter and dark areas darker
 the user can adjust LUMINANCE first, or BIAS the threshold of what is  considered 'light' or  'dark'
 
 ## SHADERS
-### cartoon_edge: adds a cartoon edge or 'border' around edges of an image: uses sobel edge detection
-### cell_shade: combines 'cartoon_edge' and 'flatten_color' to create a comic-book or cartoony effect. think "legend of zelda: wind waker" or "dark cloud 2"
+### cartoon_edge: 
+adds a cartoon edge or 'border' around edges of an image: uses sobel edge detection
+### cell_shade:
+ combines 'cartoon_edge' and 'flatten_color' to create a comic-book or cartoony effect. think "legend of zelda: wind waker" or "dark cloud 2"
