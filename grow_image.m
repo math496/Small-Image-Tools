@@ -57,6 +57,7 @@ for k=1:scaling_factor
     
         x_out = x_out+1;
         imgOut(y_out, x_out, :) = imgIn;
+        x_out = (1:scaling_factor:cols)-1;
     end    
 end
 
