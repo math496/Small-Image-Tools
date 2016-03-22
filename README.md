@@ -40,4 +40,10 @@ copies a square from an image spliceFrom to an image spliceTos
 adds a cartoon edge or 'border' around edges of an image: uses sobel edge detection
 
 ### cell_shade:
- combines 'cartoon_edge' and 'flatten_color' to create a comic-book or cartoony effect. think "legend of zelda: wind waker" or "dark cloud 2"
+combines 'cartoon_edge' and 'flatten_color' to create a comic-book or cartoony effect. think "legend of zelda: wind waker" or "dark cloud 2"
+
+### PREDICT IMAGE
+predicts the values of an image by using it's neighboring pixels' 
+channel values, as noted on page 3 of 'IMage Splicing Detection Using 2-D
+phase congruency and statistical moments of characteristic function', by 
+Wen CHen, Yun Q. Shi, & We Su.
