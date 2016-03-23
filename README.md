@@ -1,6 +1,8 @@
 # Small-Image-Tools
 Small tools for image processing. Made for fun, programming practice, and to understand images better for my image forgery detection project with SDSU and LEIDOS.
+All tools written by Efron Licht unless stated otherwise.
 
+Please see the files themselves for more advanced documentation.
 
 ## SIZE: RESAMPLING:
 
@@ -29,20 +31,20 @@ the user can adjust LUMINANCE first, or BIAS the threshold of what is  considere
 ## IMAGE FORGERY:
 Various tools to create forged images for the purpose of image forgery detection
 
-### copy_paste_forge
+### copy_paste_forge:
 copies squares from the top-left quadrant of an image to somewhere else in the image
 
-### splice_forge
-copies a square from an image spliceFrom to an image spliceTos
+### splice_forge:
+copies a square from an image spliceFrom to an image spliceTo
 
-## SHADERS
+## SHADERS:
 ### cartoon_edge: 
 adds a cartoon edge or 'border' around edges of an image: uses sobel edge detection
 
 ### cell_shade:
 combines 'cartoon_edge' and 'flatten_color' to create a comic-book or cartoony effect. think "legend of zelda: wind waker" or "dark cloud 2"
 
-### PREDICT IMAGE
+### predict_image:
 predicts the values of an image by using it's neighboring pixels' 
 channel values, as noted on page 3 of 'IMage Splicing Detection Using 2-D
 phase congruency and statistical moments of characteristic function', by 
