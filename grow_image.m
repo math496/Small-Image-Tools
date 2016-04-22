@@ -52,13 +52,14 @@ x_out = (1:scaling_factor:cols)-1;
 %RESAMPLE
 for k=1:scaling_factor
     y_out = y_out+1;
+    x_out = (1:scaling_factor:cols)-1;
 
     for j=1:scaling_factor
     
         x_out = x_out+1;
         imgOut(y_out, x_out, :) = imgIn;
-        x_out = (1:scaling_factor:cols)-1;
-    end    
+    end
+    
 end
 
 end
