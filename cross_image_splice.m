@@ -120,7 +120,7 @@ if USE_CUSTOM_SPLICE_SIZE
     splice_size = custom_splice_size;
 else
     min_splice_size = floor(min(row, col)/8);
-    max_splice_size = floor(min(row, col)/2);
+    max_splice_size = floor(min(row, col)/sqrt(2));
     splice_size = randi([min_splice_size, max_splice_size]);
 end
 
