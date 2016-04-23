@@ -35,6 +35,9 @@ function write_spliced_images(filenames, splice_count, varargin)
     %  levels. image compression quality is between 40 and 90, and the
     %  compression level difference ranges between 0 and 25.
     
+    % no_duplicates:
+    % stops splicing of images into themselves.
+    
 %% Broken Logging Stuff, Don't Worry About It
 %     function log_filename = makeLog
 %         time = (datestr('now', 'mmmm-dd'));
@@ -60,7 +63,7 @@ function write_spliced_images(filenames, splice_count, varargin)
 COMPRESS_IMAGES = 0;
 USE_CUSTOM_SPLICE_SIZE = 0;
 TRIM_TO_SIZE = 0;
-
+NO_DUPLICATES = 0;
 if nargin > 2
     for n=1:length(varargin)
         
@@ -74,6 +77,10 @@ if nargin > 2
         elseif(strcmp(varargin{n}, 'trim'));
             TRIM_TO_SIZE = 1;
             trim_size = varargin{n+1};
+        
+        elseif(strcmp(varargin{n}, 'no_duplicates'));
+            NO_DUPLICATES = 1;
+            
         end
     end
 end
@@ -100,21 +107,33 @@ second_file = reshape(repmat(1:N, N, 1), [], 1);
 %   ..              ..
 %   1               n
 %   2               n
+if NO_DUPLICATES
+    % remove paired tuples (i.e, [1, 1], [3, 3], [n, n])
+    non_duplicates = find(first_file ~= second_file);
+    first_file = first_file(non_duplicates);
+    second_file = second_file(non_duplicates);
+    N = numel(first_file);
+end
 
 
-permutation_key = randperm(N^2, splice_count);
-P = numel(permutation_key);
-%log = cell(P, 1);
-%has_been_logged = zeros(P, 1);
+if strcmp(splice_count, 'all')
+    splice_count = N;
+    permutation_key = 1:N;   %no need to randomize
+else
+    permutation_key = randperm(N, splice_count);
+end
+
+%log = cell(splice_count, 1);
+%has_been_logged = zeros(splice_count, 1);
 
 
 % keep track of percent completion
-percent_marker = linspace(0, P);
+percent_marker = linspace(0, splice_count);
 percent_count = 1;
 next_percent_marker = percent_marker(2);
 
 %% MAIN LOOP
-for n=1:P
+for n=1:splice_count
     % choose source and destination files
     key = permutation_key(n);
     
@@ -191,7 +210,7 @@ for n=1:P
         % if successful, note in LOG, but don't write to file to cut down on I/O
         % overhead
         
-%         log{P} = strcat(num2str(n), ',', source_file, ',', dest_file, ',', ...
+%         log{splice_count} = strcat(num2str(n), ',', source_file, ',', dest_file, ',', ...
 %             output_filename, ',', num2str(source_quality), ',', ...
 %             num2str(target_quality), ',', 'good', '\n');
     catch exception
@@ -201,7 +220,7 @@ for n=1:P
         
         % write the LOG and keep going.
         
-        %         log{P} = strcat(num2str(n), ',', source_file, ',', dest_file, ',', ...
+        %         log{splice_count} = strcat(num2str(n), ',', source_file, ',', dest_file, ',', ...
         %             output_filename, ',', num2str(source_quality), ',', ...
         %             num2str(target_quality), ',', 'failed', ',', exception.message, '\n');
         %         write_log(log, has_been_logged);
@@ -211,7 +230,7 @@ for n=1:P
     if n > next_percent_marker
         percent_count = percent_count + 1;
         next_percent_marker = percent_marker(percent_count+1);
-        fprintf('\n %0g percent complete! \n', round(n/P*100));
+        fprintf('\n %0g percent complete! \n', round(n/splice_count*100));
     end
     
 end
