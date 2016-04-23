@@ -31,11 +31,16 @@ the user can adjust LUMINANCE first, or BIAS the threshold of what is  considere
 ## IMAGE FORGERY:
 Various tools to create forged images for the purpose of image forgery detection
 
-### copy_paste_forge:
-copies squares from the top-left quadrant of an image to somewhere else in the image
+### cross_image_splice:
+splices a random part of a SOURCE IMAGE into a TARGET IMAGE. optionally can compress one or both images, trim to size, or copy a block of specific size. can create a copy_move forgery by specifying the source and target image to be the same.
 
-### splice_forge:
-copies a square from an image spliceFrom to an image spliceTo
+### write_spliced_images:
+takes a list of filenames and uses cross_image_splice to splice them together. can splice only non-duplicates, only duplicates, compress, or trim.  
+### OLD_copy_paste_forge:
+(OBSOLETE): copies squares from the top-left quadrant of an image to somewhere else in the image. obsoleted by cross_image_splice
+
+### OLD_splice_forge:
+(OBSOLETE): copies a square from an image spliceFrom to an image spliceTo. obsoleted by cross_image_splice.
 
 ## SHADERS:
 ### cartoon_edge: 
