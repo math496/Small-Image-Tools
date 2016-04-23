@@ -60,6 +60,7 @@ if nargin > 3
         elseif(strcmp(varargin{n}, 'trim'));
             TRIM_TO_SIZE = 1;
             trim_size = varargin{n+1};
+            
         end
     end
 end
