@@ -98,7 +98,7 @@ N = numel(filenames);
 
 first_file = repmat((1:N)', N, 1);
 second_file = reshape(repmat(1:N, N, 1), [], 1);
-
+    
 % this gives us a two-column array like this:
 %   first_file     second_file
 %   1               1
@@ -163,7 +163,7 @@ for n=1:splice_count
     target_string = strcat('_targ_', target_file(1:end-4), ...
         sprintf('_q2_%g', target_quality));
     output_filename = strcat(splice_string, source_string, ...
-        target_string, '.jpg') ;
+        target_string, '.png') ;
 
     if CUSTOM_DESTINATION_FOLDER
         try mkdir(destination_folder);
