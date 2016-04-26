@@ -4,7 +4,9 @@ function write_spliced_images(filenames, splice_count, varargin)
 % of filenames and randomly chooses splice_count pairs to splice into each
 % other. can optionally compress images at different compression levels,
 % trim images to a certain size, or splice a block of exactly a certain
-% size
+% size.
+% Written by Efron Licht. Feel free to use, modify, etc, but please give me
+% credit.
 
 
 
@@ -23,20 +25,28 @@ function write_spliced_images(filenames, splice_count, varargin)
     %   trim both images to trim_size x trim_size (non-negative integer)
     %   we recommend 128, 256, or 512
 
-
-
     % 'splice_size', splice_size
     %   splice a block of exactly size splice_size
 
-
+    % 'source_compression', source_compression
+    %  JPG compress the SOURCE image to the specified quality level
+    %  (a positive integer < 100)
+    
+    % 'target_compression', target_compression
+    %  JPG oompress the TARGET image to the specified quality level
+    %  (a positive integer < 100)
+    
 % unpaired input:
-    %  compression:
+    %  'random_compression':
     %  compresses both images before splicing at different compression
     %  levels. image compression quality is between 40 and 90, and the
     %  compression level difference ranges between 0 and 25.
     
-    % no_duplicates:
+    % 'no_duplicates':
     % stops splicing of images into themselves.
+    
+    % 'duplicates_only':
+    % only create copy-move forgeries (splice an image into itself)
     
 %% Broken Logging Stuff, Don't Worry About It
 %     function log_filename = makeLog
@@ -60,38 +70,55 @@ function write_spliced_images(filenames, splice_count, varargin)
 %     end
 
 %% INPUT HANDLING
-COMPRESS_IMAGES = 0;
-CUSTOM_DESTINATION_FOLDER = 0;
-DUPLICATES_ONLY = 0; 
-NO_DUPLICATES = 0;
-TRIM_TO_SIZE = 0;
-USE_CUSTOM_SPLICE_SIZE = 0;
+
+RANDOMLY_COMPRESS_IMAGES = false;
+CUSTOM_DESTINATION_FOLDER = false;
+DUPLICATES_ONLY = false; 
+NO_DUPLICATES = false;
+TRIM_TO_SIZE = false;
+USE_CUSTOM_SPLICE_SIZE = false;
+SOURCE_COMPRESSION = false;
+TARGET_COMPRESSION = false;
 
 if nargin > 2
     for n=1:length(varargin)
         
-        if(strcmp(varargin{n}, 'compression'))
-            COMPRESS_IMAGES = 1;
+        if(strcmp(varargin{n}, 'random_compression'))
+            RANDOMLY_COMPRESS_IMAGES = true;
             
         elseif(strcmp(varargin{n}, 'splice_size'))
-            USE_CUSTOM_SPLICE_SIZE = 1;
+            USE_CUSTOM_SPLICE_SIZE = true;
             splice_size = varargin{n+1};
             
         elseif(strcmp(varargin{n}, 'trim'));
-            TRIM_TO_SIZE = 1;
+            TRIM_TO_SIZE = true;
             trim_size = varargin{n+1};
         
         elseif(strcmp(varargin{n}, 'no_duplicates'));
-            NO_DUPLICATES = 1;
+            NO_DUPLICATES = true;
             
         elseif(strcmp(varargin{n}, 'duplicates_only'));
-            DUPLICATES_ONLY = 1;
+            DUPLICATES_ONLY = true;
             
         elseif(strcmp(varargin{n}, 'destination_folder'));
-            CUSTOM_DESTINATION_FOLDER = 1;
+            CUSTOM_DESTINATION_FOLDER = true;
             destination_folder = varargin{n+1};
+            try mkdir(destination_folder)
+            catch
+                %pass%
+            end
+        elseif(strcmp(varargin{n}, 'source_compression'))
+            SOURCE_COMPRESSION = true;
+            source_quality = varargin{n+1};
+        elseif(strcmp(varargin{n}, 'target_compression'))
+            TARGET_COMPRESSION = true;
+            target_quality = varargin{n+1};
         end
     end
+end
+
+if RANDOMLY_COMPRESS_IMAGES && (SOURCE_COMPRESSION || TARGET_COMPRESSION)
+    error('COMPRESS_RANDOMLY and specified compression are mutually exclusive')
 end
 
 tic
@@ -172,8 +199,11 @@ end
 percent_marker = linspace(0, splice_count);
 percent_count = 1;
 next_percent_marker = percent_marker(2);
-
 %% MAIN LOOP
+% set image quality to 100 if not specified.
+if ~SOURCE_COMPRESSION,     source_quality = 100; end
+if ~TARGET_COMPRESSION,     target_quality = 100; end
+
 for n=1:splice_count
     % choose source and destination files
     key = permutation_key(n);
@@ -182,15 +212,10 @@ for n=1:splice_count
     target_file = filenames{second_file(key)};
     
     %source quality
-    if COMPRESS_IMAGES
+    if RANDOMLY_COMPRESS_IMAGES
         compression_level_difference = randi([0, 25]);
         source_quality = randi([40+compression_level_difference, 90]);
-        target_quality = source_quality - compression_level_difference;
-    
-    else
-        source_quality = 100;
-        target_quality = 100;
-    
+        target_quality = source_quality - compression_level_difference;        
     end
     
     % filename string manipulation
@@ -206,13 +231,7 @@ for n=1:splice_count
         target_string, '.png') ;
 
     if CUSTOM_DESTINATION_FOLDER
-    
-        try mkdir(destination_folder);
-        catch
-            % pass - we ignore warning that destination folder already
-            % exists
-        end
-        output_file = strcat(destination_folder, '/', output_file);
+          output_file = strcat(destination_folder, '/', output_file);
     end
     
     
@@ -223,7 +242,7 @@ for n=1:splice_count
     
     try % cross_image_splice
         
-        if TRIM_TO_SIZE && USE_CUSTOM_SPLICE_SIZE && COMPRESS_IMAGES
+        if TRIM_TO_SIZE && USE_CUSTOM_SPLICE_SIZE && RANDOMLY_COMPRESS_IMAGES
             cross_image_splice(source_file, target_file, output_file, ...
                 'compress_source', source_quality, ...
                 'compress_target', target_quality, ...
@@ -235,7 +254,7 @@ for n=1:splice_count
                 'trim', trim_size, ...
                 'splice_size', splice_size);
             
-        elseif TRIM_TO_SIZE && COMPRESS_IMAGES
+        elseif TRIM_TO_SIZE && RANDOMLY_COMPRESS_IMAGES
             cross_image_splice(source_file, dest_file, output_file, ...
                 'compress_source', source_quality, ...
                 'trim', trim_size)
@@ -244,13 +263,13 @@ for n=1:splice_count
             cross_image_splice(source_file, dest_file, output_file, ...
                 'trim', trim_size)
             
-        elseif COMPRESS_IMAGES && USE_CUSTOM_SPLICE_SIZE
+        elseif RANDOMLY_COMPRESS_IMAGES && USE_CUSTOM_SPLICE_SIZE
             cross_image_splice(source_file, target_file, output_file, ...
                 'compress_source', source_quality, ...
                 'compress_target', target_quality, ...
                 'splice_size', splice_size);
             
-        elseif COMPRESS_IMAGES
+        elseif RANDOMLY_COMPRESS_IMAGES
             cross_image_splice(source_file, target_file, output_file, ...
                 'compress_source', source_quality, ...
                 'compress_target', target_quality)
@@ -294,7 +313,7 @@ for n=1:splice_count
 end
 
 %% CLEANUP
-    if COMPRESS_IMAGES
+    if RANDOMLY_COMPRESS_IMAGES
             delete('temp.jpg')
     end
 end
